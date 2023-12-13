@@ -7,6 +7,7 @@ from rest_framework import status, exceptions, serializers
 from django.shortcuts import get_object_or_404
 from helpers.helpers import get_id
 from core.exceptions import InternalError
+from django.db import IntegrityError
 
 # from django.db import connection
 
@@ -29,6 +30,11 @@ class OrderAPIView(APIView):
             order_serializer = OrderSerializer(data=request.data)
             if order_serializer.is_valid(raise_exception=True):
                 order_serializer.save()
-        except Exception as e:
-            raise InternalError(e)
-        return Response(order_serializer.data, status=status.HTTP_201_CREATED)
+                return Response(order_serializer.data, status=status.HTTP_201_CREATED)
+        except serializers.ValidationError as validation_error:
+            raise validation_error
+        except Exception as internal_error:
+            raise InternalError(internal_error)
+        
+        return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
