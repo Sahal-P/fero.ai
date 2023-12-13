@@ -18,11 +18,12 @@ from django.contrib import admin
 from django.urls import path, include
 from customers.views import CustomerAPIView
 from products.views import ProductAPIView
-# from orders.views import 
+from orders.views import OrderAPIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path("__debug__/", include("debug_toolbar.urls")),
     path('api/customers/', CustomerAPIView.as_view(), name="customers"),
     path('api/products/', ProductAPIView.as_view(), name="products"),
-    # path('api/orders/', ),
+    path('api/orders/', OrderAPIView.as_view(), name="orders"),
 ]
