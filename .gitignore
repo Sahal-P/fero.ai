@@ -1,0 +1,48 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+venv/
+env/
+
+static/
+
+media/
+
+*.log
+
+.env
+
+# IDE specific files
+.vscode/
+*.pyc
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.pyproj
+*.user
+*.userosscache
+*.suo
+*.ntvs*
+*.njsproj
+*.sln.docstates
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# Python tools
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Documentation
+docs/_build/
+
+# Ignore local development settings
+local_settings.py
