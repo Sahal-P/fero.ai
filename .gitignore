@@ -15,6 +15,8 @@ media/
 
 .env
 
+db.sqlite3
+
 # IDE specific files
 .vscode/
 *.pyc
