@@ -13,7 +13,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OrderItem
-        fields = ["product_id", "quantity"]
+        fields = ["id", "product_id", "quantity"]
 
     # def validate_product_id(self, value):
     #     if not Product.objects.filter(id=value).exists():
@@ -27,7 +27,14 @@ class OrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ["customer_id", "order_date", "address", "order_number", "order_items"]
+        fields = [
+            "id",
+            "customer_id",
+            "order_date",
+            "address",
+            "order_number",
+            "order_items",
+        ]
 
     def validate_customer_id(self, value):
         if not Customer.objects.filter(id=value).exists():
@@ -72,3 +79,40 @@ class OrderSerializer(serializers.ModelSerializer):
         ]
         OrderItem.objects.bulk_create(order_items)
         return order
+
+    @transaction.atomic()
+    def update(self, instance, validated_data):
+        order_items_data = validated_data.pop("order_items", [])
+
+        instance.address = validated_data.get("address", instance.address)
+        instance.save()
+
+        updated_order_items = [
+            OrderItem.objects.update_or_create(
+                id=order_item_data.get("id"),
+                order=instance,
+                defaults={
+                    "product_id": order_item_data.get("product_id"),
+                    "quantity": order_item_data.get("quantity"),
+                },
+            )[0]  # inserting the first element of the tuple returned by update_or_create eg: updated , created =
+            for order_item_data in order_items_data
+        ]
+        # OrderItem.objects.filter(order=instance).exclude(id__in=[item.id for item in updated_order_items]).delete()
+        instance.order_items.exclude(
+            id__in=[item.id for item in updated_order_items]
+        ).delete()
+
+        return instance
+
+
+class GetOrderItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderItem
+        fields = '__all__'
+        
+class GetOrderSerializer(serializers.ModelSerializer):
+    order_items = OrderItemSerializer(many=True, read_only=True)
+    class Meta:
+        model = Order
+        fields = '__all__'
