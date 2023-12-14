@@ -24,7 +24,7 @@ class Order(BaseModel):
         ],
         verbose_name=_("Order number"),
     )
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name="order")
     order_date = models.DateField(verbose_name=_("Order date"), auto_now_add=True)
     address = models.CharField(max_length=ORDER_ADDRESS_MAX_LENGTH, verbose_name=_("Address"))
 
