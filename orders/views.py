@@ -53,7 +53,7 @@ class OrderAPIView(APIView):
             else:
                 orders = Order.objects.prefetch_related("order_items").all()
             order_serializer = GetOrderSerializer(instance=orders, many=True)
-            return Response(order_serializer.data, status=status.HTTP_201_CREATED)
+            return Response(order_serializer.data, status=status.HTTP_200_OK)
         except Order.DoesNotExist:
             return Response(
                 {"error": "No orders found."}, status=status.HTTP_404_NOT_FOUND
@@ -86,7 +86,7 @@ class OrderAPIView(APIView):
 
             if order_serializer.is_valid(raise_exception=True):
                 order_serializer.save()
-                return Response(order_serializer.data, status=status.HTTP_200_OK)
+                return Response(order_serializer.data, status=status.HTTP_204_NO_CONTENT)
             print(connection.queries)
         except Order.DoesNotExist:
             return Response(
