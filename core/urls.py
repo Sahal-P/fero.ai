@@ -19,11 +19,16 @@ from django.urls import path, include
 from customers.views import CustomerAPIView
 from products.views import ProductAPIView
 from orders.views import OrderAPIView
+from django.conf import settings
+from django.conf.urls.static import static
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("__debug__/", include("debug_toolbar.urls")),
     path('api/customers/', CustomerAPIView.as_view(), name="customers"),
     path('api/products/', ProductAPIView.as_view(), name="products"),
     path('api/orders/', OrderAPIView.as_view(), name="orders"),
-]
+] 
+
+urlpatterns += staticfiles_urlpatterns()
