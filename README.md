@@ -23,6 +23,11 @@ DATABASE_NAME=
 DATABASE_USER=
 DATABASE_PASS=
 ```
+**3. Run Test**
+```sh
+python manage.py test
+
+```
 **3. Start Server**
 ```sh
 docker-compose up --build
